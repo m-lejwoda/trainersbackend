@@ -23,6 +23,7 @@ class TrainerHoursPerDaySerializer(serializers.ModelSerializer):
 
     def get_weekday(self,obj):
         return obj.get_weekday_display()
+        
     def get_hours_list(self,obj):
         str_from_hour_time = obj.from_hour.strftime("%H:%M:%S")
         str_to_hour_time = obj.to_hour.strftime("%H:%M:%S")
