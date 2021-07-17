@@ -1,11 +1,14 @@
+from trainersdjango.settings import STRIPE_API_KEY
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import *
 from .models import *
 from rest_framework import status
+from django.shortcuts import render 
 import stripe
-stripe.api_key = "sk_test_9kDoV63WPpCjIGQqE95cfgql00L7UU3Wd8"
+from django.conf import settings
+stripe.api_key = settings.STRIPE_API_KEY
 
 
 @api_view(['GET'])
@@ -24,11 +27,13 @@ def alltrainershours(request):
         return Response(serializer.data)
 
 
+@api_view(['POST'])
 def stripe_session(request):
+    print(stripe.api_key)
     stripe.checkout.Session.create(
-        success_url="https://example.com/success",
-        cancel_url="https://example.com/cancel",
-        payment_method_types=["card"],
+        success_url="http://127.0.0.1:8000/api/showsuccess",
+        cancel_url="http://127.0.0.1:8000/api/failsuccess",
+        payment_method_types=["card","p24"],
         line_items=[
             {
                 "price": "price_H5ggYwtDq4fbrJ",
@@ -37,3 +42,9 @@ def stripe_session(request):
         ],
         mode="payment",
     )
+
+def show_success_template(request):
+    return render(request,'success.html')
+
+def show_fail_template(request):
+    return render(request,'fail.html')
