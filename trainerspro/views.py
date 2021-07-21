@@ -29,19 +29,19 @@ def alltrainershours(request):
 
 @api_view(['POST'])
 def stripe_session(request):
-    print(stripe.api_key)
-    stripe.checkout.Session.create(
+    stripe_session = stripe.checkout.Session.create(
         success_url="http://127.0.0.1:8000/api/showsuccess",
         cancel_url="http://127.0.0.1:8000/api/failsuccess",
         payment_method_types=["card","p24"],
         line_items=[
             {
-                "price": "price_H5ggYwtDq4fbrJ",
-                "quantity": 2,
+                "price": "price_1JEKReKoR4wmJw304pg4VS2l",
+                "quantity": 1,
             },
         ],
         mode="payment",
     )
+    return Response(stripe_session)
 
 def show_success_template(request):
     return render(request,'success.html')

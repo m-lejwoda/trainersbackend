@@ -22,6 +22,7 @@ class Package(models.Model):
     name = models.CharField(max_length=100)
     price= models.DecimalField(max_digits=10, decimal_places=2)
     description = models.CharField(max_length=300)
+    stripe_id = models.CharField(max_length=50,default="")
     time = models.IntegerField()
     class Meta:
         verbose_name = _('package')
