@@ -13,11 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import debug_toolbar
 from django.contrib import admin
 from django.urls import path,include
+from filebrowser.sites import site
+
 
 urlpatterns = [
+    # path('admin/filebrowser/',  site.urls),
+    # path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
     path('apiauthentication/', include('rest_framework.urls')),
-    path('api/',include('trainerspro.urls'))
+    path('api/',include('trainerspro.urls')),
+    path('debug/', include(debug_toolbar.urls,namespace='django_toolbar')),
+    path('tinymce/', include('tinymce.urls')),
+    # path('mce_filebrowser/',include('mce_filebrowser.urls'))
 ]

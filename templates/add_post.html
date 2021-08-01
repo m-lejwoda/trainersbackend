@@ -1,0 +1,14 @@
+<h3>Dodawanie postu</h3>
+<form action="" method="post">
+    {{form.media}}
+    {{form.content}}
+    <input type="submit">
+
+</form>
+<script>
+tinyMCE.init({
+  mode: "textareas",  // to do all text areas
+  // or
+  selector: "#id_myfield",  // change this value according to your HTML
+});
+</script>

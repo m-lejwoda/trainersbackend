@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}TrainersPro{% endblock title %}
+{% block content %}
+    
+    <h1>Tu powinien być formularz</h1>
+    
+    <form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" />
+    </form>
+    <div class="w-50 p-3">
+  <label for="formGroupExampleInput" class="form-label">Example label</label>
+  <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example input placeholder">
+</div>
+<div class="mb-6">
+  <label for="formGroupExampleInput2" class="form-label">Another label</label>
+  <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input placeholder">
+</div>
+
+{% endblock content %}
+

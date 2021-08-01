@@ -16,7 +16,11 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+INTERNAL_IPS = [
+    '172.20.0.1',
+    '127.0.0.1',
+    '0.0.0.0'
+]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -24,9 +28,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+# DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = ['*']
 
 
 STRIPE_API_KEY = config('STRIPE_API_KEY')
@@ -34,6 +39,8 @@ STRIPE_API_KEY = config('STRIPE_API_KEY')
 # Application definition
 
 INSTALLED_APPS = [
+    # 'grappelli',
+    # 'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'trainerspro',
-    'rest_framework'
+    'rest_framework',
+    'debug_toolbar',
+    'storages',
+    'tinymce',
+    'phonenumber_field'
+    # 'sorl.thumbnail',
+    # 'mce_filebrowser',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'trainersdjango.urls'
@@ -72,6 +86,16 @@ TEMPLATES = [
     },
 ]
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 WSGI_APPLICATION = 'trainersdjango.wsgi.application'
 
 
@@ -87,11 +111,12 @@ WSGI_APPLICATION = 'trainersdjango.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': 5432,
+        'ENGINE':config('POSTGRES_ENGINE'),
+        'NAME':config('POSTGRES_NAME'),
+        'USER':config('POSTGRES_USER'),
+        'PASSWORD':config('POSTGRES_PASSWORD'),
+        'HOST': config('POSTGRES_HOST'),
+        'PORT': config('POSTGRES_PORT'),
     }
 }
 
@@ -113,9 +138,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+DEFAULT = {
+    'selector': 'textarea',
+    'theme': 'modern',
+    'plugins': 'link image preview codesample contextmenu table code',
+    'toolbar1': 'bold italic underline | alignleft aligncenter alignright alignjustify '
+           '| bullist numlist | outdent indent | table | link image | codesample | preview code',
+    'contextmenu': 'formats | link image',
+    'menubar': False,
+    'inline': False,
+    'statusbar': True,
+    'height': 360,
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
+
 
 LANGUAGE_CODE = 'pl-pl'
 
@@ -132,6 +170,8 @@ CELERY_TIMEZONE = 'Europe/Warsaw'
 CELERY_TASK_TRACK_STARTED = True
 
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_ENABLE_UTC = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -146,5 +186,56 @@ AUTH_USER_MODEL = 'trainerspro.CustomUser'
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-print(config('SECRET_KEY'))
-print(config('POSTGRES_USER'))
+
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+# STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# DEFAULT_FILE_STORAGE = 'trainerspro.custom_storage.S3Storage'
+# TINYMCE_DEFAULT_CONFIG = {
+#     "theme": "silver",
+#     "height": 700,
+#     "menubar": False,
+#     "images_upload_url": '/upload_image/',
+#     "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
+#     "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
+#     "code,help,wordcount",
+#     "toolbar": "undo redo | formatselect | "
+#     "bold italic backcolor | alignleft aligncenter "
+#     "alignright alignjustify | bullist numlist outdent indent | link image |"
+#     "removeformat | help",
+# }
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 360,
+    'width': 1120,
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 20,
+    'selector': 'textarea',
+    # 'file_browser_callback': 'mce_filebrowser',
+    'plugins': '''
+            textcolor save link image media preview codesample contextmenu
+            table code lists fullscreen  insertdatetime  nonbreaking
+            contextmenu directionality searchreplace wordcount visualblocks
+            visualchars code fullscreen autolink lists  charmap print  hr
+            anchor pagebreak
+            ''',
+    'toolbar1': '''
+            fullscreen preview bold italic underline | fontselect,
+            fontsizeselect  | forecolor backcolor | alignleft alignright |
+            aligncenter alignjustify | indent outdent | bullist numlist table |
+            | link image media | codesample |
+            ''',
+    'toolbar2': '''
+            visualblocks visualchars |
+            charmap hr pagebreak nonbreaking anchor |  code |
+            ''',
+    'contextmenu': 'formats | link image',
+    'menubar': True,
+    'statusbar': True,
+    }
