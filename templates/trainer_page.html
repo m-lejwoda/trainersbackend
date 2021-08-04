@@ -1,6 +1,107 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-  <div class="sad">Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt sit maxime, nam corporis minima rem laborum praesentium similique explicabo animi quos? Delectus minima saepe aliquid eum aliquam, accusantium veritatis harum.</div>
-<img src={% static 'jan-blachowicz.jpg' %} alt="">
+<div class="trainerpage">
+  <div class="todaytrainings trainerpage__todaytrainings">
+    <div class="todaytrainings__title trainerpage__title">Dzisiejsze treningi</div>
+    <div class="todaytrainings__elements">
+      <div class="todaytrainings__element ">
+        <div class="todaytrainings__element__time">12:00 - 14:00</div>
+        <div class="todaytrainings__element__data"><span>Michał</span><span>Nazwa Siłowni</span></div>
+        <div class="todaytrainings__element__dropdown todaytrainings__element__dropdown--hide">
+          <div class="todaytrainings__element__dropdown__elements">
+            <div class="todaytrainings__element__userdata ">
+              <span>saxatachi@gmail.com</span>
+              <span>501779384</span>
+            </div>
+            <div class="todaytrainings__element__package ">pakiet 1 trening</div>
+            <div class="todaytrainings__element__payment ">Status płatności: <span
+                class="todaytrainings__element__payment--orange"> Zapłacone</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="calendar trainerpage__calendar">
+    <div class="calendar__title trainerpage__title">Kalendarz</div>
+    <div id="calendar" style="width: 100%; min-width: 375px; height:400px; display: inline-block;"></div>
+  </div>
+  <div class="calendar__block">
+    <div class="calendar__title trainerpage__title">Treningi</div>
+    <div class="calendar__elements todaytrainings__elements">
+      <div class="calendar__element todaytrainings__element">
+        <div class="calendar__element__time todaytrainings__element__time">12:00 - 14:00</div>
+        <div class="calendar__element__data todaytrainings__element__data"><span>Michał</span><span>Nazwa Siłowni</span>
+        </div>
+        <div class="calendar__element__userdata todaytrainings__element__userdata">email telefon</div>
+        <div class="calendar__element__package todaytrainings__element__package">pakiet</div>
+        <div class="calendar__element__payment todaytrainings__element__payment">Status płatności: Zapłacone</div>
+      </div>
+      <div class="calendar__element todaytrainings__element">
+        <div class="calendar__element__time todaytrainings__element__time">12:00 - 14:00</div>
+        <div class="calendar__element__data todaytrainings__element__data"><span>Michał</span><span>Nazwa Siłowni</span>
+        </div>
+        <div class="calendar__element__userdata todaytrainings__element__userdata">email telefon</div>
+        <div class="calendar__element__package todaytrainings__element__package">pakiet</div>
+        <div class="calendar__element__payment todaytrainings__element__payment">Status płatności: Zapłacone</div>
+      </div>
+      <div class="calendar__element todaytrainings__element">
+        <div class="calendar__element__time todaytrainings__element__time">12:00 - 14:00</div>
+        <div class="calendar__element__data todaytrainings__element__data"><span>Michał</span><span>Nazwa Siłowni</span>
+        </div>
+        <div class="calendar__element__userdata todaytrainings__element__userdata">email telefon</div>
+        <div class="calendar__element__package todaytrainings__element__package">pakiet</div>
+        <div class="calendar__element__payment todaytrainings__element__payment">Status płatności: Zapłacone</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="clients trainerpage__clients">
+    <div class="clients__title trainerpage__title">Klienci z planami</div>
+    <div class="clients__elements">
+      <div class="clients__element">
+        <div class="clients__element__name">Michał</div>
+        <div class="clients__element__phone">815277626</div>
+        <div class="clients__element__email">saxatachi@gmail.com</div>
+        <div class="clients__element__package">Pakiet 8 treningów</div>
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock content %}
+{% block script %}
+<script>
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+
+      initialView: 'dayGridMonth',
+      contentHeight: 360,
+      eventTextColor: 'red',
+      locale: 'pl'
+
+    });
+    calendar.render();
+  });
+  document.addEventListener("click", function () {
+
+    console.log("click")
+  });
+  function getdropdown(evt) {
+    if (evt.currentTarget.children[2].classList.contains('todaytrainings__element__dropdown--hide') === true) {
+      evt.currentTarget.children[2].classList.remove('todaytrainings__element__dropdown--hide')
+      evt.currentTarget.children[2].classList.add('todaytrainings__element__dropdown--visible')
+    } else {
+      evt.currentTarget.children[2].classList.remove('todaytrainings__element__dropdown--visible')
+      evt.currentTarget.children[2].classList.add('todaytrainings__element__dropdown--hide')
+    }
+  }
+
+  var element_dropdown = document.querySelector('.todaytrainings__element');
+  element_dropdown.addEventListener("click", getdropdown);
+
+</script>
+{% endblock script %}

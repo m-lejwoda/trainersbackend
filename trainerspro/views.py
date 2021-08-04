@@ -49,6 +49,13 @@ def trainer_add_event(request):
 def trainer_mainpage(request):
     return render(request,'trainer_page.html')
 
+def add_private_consultation(request):
+    form = TrainerEventForm(request.POST or None,initial={'trainer': request.user})
+    if form.is_valid():
+        form.save()
+        form=TrainerEventForm()
+    context = {'form': form}
+    return render(request,'add_private_consultation.html',context)
 @api_view(['GET'])
 def alltrainershours(request):
     if request.method == 'GET':

@@ -195,7 +195,7 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # DEFAULT_FILE_STORAGE = 'trainerspro.custom_storage.S3Storage'
 # TINYMCE_DEFAULT_CONFIG = {
@@ -212,6 +212,10 @@ STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 #     "removeformat | help",
 # }
 
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 TINYMCE_DEFAULT_CONFIG = {
     'height': 360,
     'width': 1120,

@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;400&display=swap');
+$myorange:#FCA311;
+body{
+    color:white;
+}
+.trainerpage{
+    background-color: #14213D;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &__title{
+        color: $myorange;
+        font-size: 36px;
+        margin-top:1rem;
+        margin-bottom:1rem;
+        font-family: 'Lato', sans-serif;
+        font-weight: 600;
+    }
+}
+.todaytrainings{
+    width:300px;
+    &__elements{
+        font-size:1.2rem;
+        display: flex;
+        justify-content: center;
+        font-weight: 500;
+    }
+    &__elements:hover{
+        cursor:pointer;
+    }
+    &__element{
+        width:100%;
+        border-bottom: 3px solid $myorange;
+        padding-bottom:1rem;
+        &__time{
+            display:flex;
+            justify-content: center;
+            margin-bottom:1rem;
+        }
+        &__data{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom:1rem;
+        }
+        &__userdata{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        &__package{
+            display: flex;
+            justify-content: center;
+            
+        }
+        &__payment{
+            display: flex;
+            justify-content: center;
+            &--orange{
+                color:$myorange;
+                margin-left:0.7rem;
+            }
+        }
+        
+        &__dropdown--visible{
+            display:block;
+            transition: 2s;
+            transform:scaleY(1);        
+        }
+        &__dropdown--hide{
+            display:none;
+            transform:scaleY(0);
+            transform-origin:50% 0;
+            transition-duration:250ms;
+        }
+    }
+}
+.calendar{
+    &__title{
+        display: flex;
+        justify-content: center;
+    }
+    &__elements{
+        display:flex;
+        flex-direction: column;
+    }
+    a{
+        color:white !important;
+        font-weight: 600;
+    }
+    &__block{
+        width:300px;
+    }
+}
+.fc .fc-col-header-cell-cushion {
+    display: inline-block !important;
+    padding: 2px 4px !important;
+    color:$myorange !important;
+  }

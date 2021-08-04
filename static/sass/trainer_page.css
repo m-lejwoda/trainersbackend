@@ -1,0 +1,167 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;400&display=swap");
+body {
+  color: white;
+}
+
+.trainerpage {
+  background-color: #14213D;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.trainerpage__title {
+  color: #FCA311;
+  font-size: 36px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-family: 'Lato', sans-serif;
+  font-weight: 600;
+}
+
+.todaytrainings {
+  width: 300px;
+}
+
+.todaytrainings__elements {
+  font-size: 1.2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-weight: 500;
+}
+
+.todaytrainings__elements:hover {
+  cursor: pointer;
+}
+
+.todaytrainings__element {
+  width: 100%;
+  border-bottom: 3px solid #FCA311;
+  padding-bottom: 1rem;
+}
+
+.todaytrainings__element__time {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.todaytrainings__element__data {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.todaytrainings__element__userdata {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.todaytrainings__element__package {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.todaytrainings__element__payment {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.todaytrainings__element__payment--orange {
+  color: #FCA311;
+  margin-left: 0.7rem;
+}
+
+.todaytrainings__element__dropdown--visible {
+  display: block;
+  -webkit-transition: 2s;
+  transition: 2s;
+  -webkit-transform: scaleY(1);
+          transform: scaleY(1);
+}
+
+.todaytrainings__element__dropdown--hide {
+  display: none;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  -webkit-transform-origin: 50% 0;
+          transform-origin: 50% 0;
+  -webkit-transition-duration: 250ms;
+          transition-duration: 250ms;
+}
+
+.calendar__title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.calendar__elements {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.calendar a {
+  color: white !important;
+  font-weight: 600;
+}
+
+.calendar__block {
+  width: 300px;
+}
+
+.fc .fc-col-header-cell-cushion {
+  display: inline-block !important;
+  padding: 2px 4px !important;
+  color: #FCA311 !important;
+}
+/*# sourceMappingURL=trainer_page.css.map */

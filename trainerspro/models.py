@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.deletion import CASCADE
+from django.db.models.fields.related import ForeignKey, OneToOneField
 from django.utils.translation import ugettext_lazy as _
 from .managers import CustomUserManager
 from .choices import WEEKDAYS
@@ -78,6 +79,13 @@ class Post(models.Model):
         verbose_name_plural = _('posts')
     def __str__(self):
         return self.title
+
+class Plan(models.Model):
+    client_name = models.CharField(max_length=100,default='')
+    client_email = models.EmailField(default='')
+    client_phone = PhoneNumberField()
+    package = models.ForeignKey('Package',on_delete=models.CASCADE)
+    events = models.ManyToManyField('Event')
 
 class TrainingByDay:
     def __init__(self, email, content, created=None):

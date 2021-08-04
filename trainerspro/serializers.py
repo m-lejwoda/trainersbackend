@@ -107,3 +107,7 @@ class TrainerDaySerializer(serializers.Serializer):
         return obj['date'].weekday()
     
     
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields =  '__all__'
