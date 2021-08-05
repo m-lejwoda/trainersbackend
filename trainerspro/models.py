@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models.deletion import CASCADE
 from django.db.models.fields.related import ForeignKey, OneToOneField
 from django.utils.translation import ugettext_lazy as _
-from .managers import CustomUserManager
+from .managers import CustomUserManager,PlanCompletedManager
 from .choices import WEEKDAYS
 from tinymce import models as tinymce_models
 from django.db.models.signals import pre_save
@@ -80,13 +80,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-class Plan(models.Model):
-    client_name = models.CharField(max_length=100,default='')
-    client_email = models.EmailField(default='')
-    client_phone = PhoneNumberField()
-    package = models.ForeignKey('Package',on_delete=models.CASCADE)
-    events = models.ManyToManyField('Event')
-
 class TrainingByDay:
     def __init__(self, email, content, created=None):
         self.email = email
@@ -95,4 +88,16 @@ class TrainingByDay:
 
 
 
+class Plan(models.Model):
+    client_name = models.CharField(max_length=100,default='')
+    client_email = models.EmailField(default='')
+    client_phone = PhoneNumberField()
+    trainer = models.ForeignKey(CustomUser,on_delete=CASCADE)
+    package = models.ForeignKey('Package',on_delete=models.CASCADE)
+    events = models.ManyToManyField('Event')
+    completed = models.BooleanField(default=False)
+    objects = models.Manager()
+    plans = PlanCompletedManager()
+    def __str__(self):
+        return self.client_name + ' ' + self.client_email + ' plan ' + self.package.name
 

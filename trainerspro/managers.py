@@ -1,6 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
-
+from django.db import models
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -39,3 +39,20 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password, **extra_fields)
+
+
+class PlanQuerySet(models.QuerySet):
+    def completed(self):
+        return self.filter(completed=True)
+    def uncompleted(self):
+        return self.filter(completed=False)
+
+class PlanCompletedManager(models.Manager):
+    def get_queryset(self):
+        return PlanQuerySet(self.model)
+    
+    def completed(self):
+        return self.get_queryset().completed()
+    
+    def uncompleted(self):
+        return self.get_queryset().uncompleted()

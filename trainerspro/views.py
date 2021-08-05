@@ -66,6 +66,9 @@ def alltrainershours(request):
         serializer = TrainerHoursPerDaySerializer(hours, many=True, context={'allevents': events,'date':date})
         return Response(serializer.data)
 
+# @api_view(['GET'])
+# def getactiveplans()
+
 @api_view(['GET'])
 def trainingbyday(request):
     if request.method == 'GET':
