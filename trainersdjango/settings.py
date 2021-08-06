@@ -52,7 +52,9 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'storages',
     'tinymce',
-    'phonenumber_field'
+    'phonenumber_field',
+    'django_celery_results',
+    'django_celery_beat'
     # 'sorl.thumbnail',
     # 'mce_filebrowser',
 ]

@@ -29,7 +29,9 @@ class Package(models.Model):
     description = models.CharField(max_length=300)
     stripe_product_id = models.CharField(max_length=50,default="")
     stripe_product_price = models.CharField(max_length=50,default="")
+    package_num = models.IntegerField(default=1)
     time = models.IntegerField()
+    
     class Meta:
         verbose_name = _('package')
         verbose_name_plural = _('packages')
@@ -46,6 +48,7 @@ class Event(models.Model):
     client_email = models.EmailField(default='')
     client_phone = PhoneNumberField()
     package = models.ForeignKey(Package,on_delete=CASCADE,null=True,blank=False)
+    
     class Meta:
         verbose_name = _('event')
         verbose_name_plural = _('events')
@@ -86,8 +89,6 @@ class TrainingByDay:
         self.content = content
         self.created = created or datetime.now()
 
-
-
 class Plan(models.Model):
     client_name = models.CharField(max_length=100,default='')
     client_email = models.EmailField(default='')
@@ -98,6 +99,8 @@ class Plan(models.Model):
     completed = models.BooleanField(default=False)
     objects = models.Manager()
     plans = PlanCompletedManager()
+    def training_numbers(self):
+        return self.package.package_num
     def __str__(self):
         return self.client_name + ' ' + self.client_email + ' plan ' + self.package.name
 
