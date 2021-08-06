@@ -27,10 +27,31 @@ def add_post(request):
 def index(self):
     return Response({"message": "Hello, world!"})
 
+# @api_view(['POST'])
+
+
+@api_view(['POST'])
+def add_plan_with_event(request):
+    if request.method == 'POST':
+        serializer = EventsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            data = request.data
+            event = Event.objects.get(id=serializer.data['id'])
+            data['events'] = [serializer.data['id']]
+            plan = PlanSerializer(data = data)
+            if plan.is_valid():
+                plan.save()
+            else:
+                print(plan)
+                return Response(plan.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(plan.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['POST'])
 def add_event(request):
     if request.method == 'POST':
-        print(request.data)
         serializer = EventsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

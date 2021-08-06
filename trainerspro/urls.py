@@ -13,7 +13,8 @@ urlpatterns = [
     path('training_by_day',trainingbyday,name='training_by_day'),
     path('add_event_by_trainer',trainer_add_event,name='trainer_add_event'),
     path('mainpage',trainer_mainpage,name="trainer_mainpage"),
-    path('add_consultation',add_private_consultation,name='add_private_consultation')
+    path('add_consultation',add_private_consultation,name='add_private_consultation'),
+    path('add_plan_with_event',add_plan_with_event,name='add_plan_with_event')
     
     # path('trainerhourswithdate',trainerhourswithdate,name='trainerhourswithdate')
 ]
