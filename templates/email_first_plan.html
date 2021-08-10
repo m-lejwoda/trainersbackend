@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load static %}
+{% load inlinecss %}
+{% inlinecss "static/sass/email.css" %}
+<html>
+    <!-- <head>
+        <link rel="stylesheet" type="text/css" href={% static 'sass/email.css' %}>
+    </head> -->
+    <body>
+    
+        Dziękujemy za zakup planu treningowego {{client_name}}
+        Twoim trenerem jest {{ trainer_name }} {{last_name}}
+        Jeśli nie możesz pojawić się na treningu zadzwoń {{trainer_phone}}
+        Twój trenining odbędzie się : {{event.date}} o godzinie {{event.start_hour}} - {{event.end_hour}}
+    <button><a href="{{url}}example">Dodaj kolejną rezerwację</a></button>
+    </body>
+</html>
+{% endinlinecss %}

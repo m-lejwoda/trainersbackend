@@ -1,3 +1,5 @@
+from rest_framework.fields import ReadOnlyField
+from trainerspro.handleexceptions import validate_date
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from .models import *
@@ -5,6 +7,7 @@ from .choices import WEEKDAYS
 from django.utils.translation import ugettext_lazy as _
 import time
 from datetime import date,datetime
+from phonenumber_field.serializerfields import PhoneNumberField
 
 # class TrainerDaySerializer(serializers.Serializer):
 #     first_name = serializers.CharField(source = "user.first_name")
@@ -16,29 +19,32 @@ from datetime import date,datetime
 #     # hours_list = serializers
 
 
-
+class TrainerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id','email','phone','first_name','last_name']
 
 class EventsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields =  '__all__'
-    
-    def validate_date(self,value):
-        today = date.today()
-        if value < today:
-            raise serializers.ValidationError(_("Wrong date"))
-        return value
-    def validate(self, attrs):
-        hours = TrainerHoursPerDay.objects.filter(weekday=attrs['date'].weekday(),user=attrs['trainer'])
-        events = Event.objects.filter(date=attrs['date'],trainer=attrs['trainer'])
-        start_hour_split = attrs['start_hour'].strftime("%H:%M:%S").rsplit(':')[0]
-        end_hour_split = attrs['end_hour'].strftime("%H:%M:%S").rsplit(':')[0]
-        work_hours = [i for i in range(int(start_hour_split),int(end_hour_split)+1)]
-        for event in events:
-            if int(event.start_hour.strftime("%H:%M:%S").rsplit(':')[0]) in work_hours and int(event.end_hour.strftime("%H:%M:%S").rsplit(':')[0]) in work_hours:
-                raise ValidationError({"error":_("Cant make reservation. Please refresh the page")})
-        serializer = TrainerHoursPerDaySerializer(hours, many=True,context={'allevents': events})
-        return super().validate(attrs)
+
+    # def validate_date(self,value):
+    #     today = date.today()
+    #     if value < today:
+    #         raise serializers.ValidationError(_("Wrong date"))
+    #     return value
+    # def validate(self, attrs):
+    #     hours = TrainerHoursPerDay.objects.filter(weekday=attrs['date'].weekday(),user=attrs['trainer'])
+    #     events = Event.objects.filter(date=attrs['date'],trainer=attrs['trainer'])
+    #     start_hour_split = attrs['start_hour'].strftime("%H:%M:%S").rsplit(':')[0]
+    #     end_hour_split = attrs['end_hour'].strftime("%H:%M:%S").rsplit(':')[0]
+    #     work_hours = [i for i in range(int(start_hour_split),int(end_hour_split)+1)]
+    #     for event in events:
+    #         if int(event.start_hour.strftime("%H:%M:%S").rsplit(':')[0]) in work_hours and int(event.end_hour.strftime("%H:%M:%S").rsplit(':')[0]) in work_hours:
+    #             raise ValidationError({"error":_("Cant make reservation. Please refresh the page")})
+    #     serializer = TrainerHoursPerDaySerializer(hours, many=True,context={'allevents': events})
+    #     return super().validate(attrs)
     
 class TrainerHoursPerDaySerializer(serializers.ModelSerializer):
     hours_list = serializers.SerializerMethodField()
@@ -108,6 +114,29 @@ class TrainerDaySerializer(serializers.Serializer):
     
     
 class PlanSerializer(serializers.ModelSerializer):
+    trainer_name = serializers.ReadOnlyField(source = "trainer.first_name")
+    last_name = serializers.ReadOnlyField(source = "trainer.last_name")
+    trainer_phone = PhoneNumberField(source = 'trainer.phone',read_only=True)
+    package_name = serializers.ReadOnlyField(source= "package.name")
+    events = EventsSerializer(many=True)
     class Meta:
         model = Plan
         fields =  '__all__'
+    
+    def validate_events(self,value):
+        print("validate_events")
+        print(value)
+        return value
+    def validate(self, attrs):
+        self.validate_events("wartosc")
+        print("attrs")
+        print(attrs)
+        return super().validate(attrs)
+    def create(self, validated_data):
+        events = validated_data.pop('events')
+        plan = Plan.objects.create(**validated_data)
+        for event in events:
+            ev = Event.objects.create(**event)
+            plan.events.add(ev)
+        return plan
+    

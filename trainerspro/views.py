@@ -12,7 +12,10 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from .forms import PostForm,TrainerEventForm
 from datetime import datetime
-from .handleexecptions import validate_date
+from .handleexceptions import validate_date,validate_training_numbers
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from .tasks import send_create_plan_mail
 
 
 stripe.api_key = settings.STRIPE_API_KEY
@@ -27,28 +30,40 @@ def add_post(request):
 def index(self):
     return Response({"message": "Hello, world!"})
 
-# @api_view(['POST'])
+@api_view(['POST'])
+def add_event_to_plan(request):
+    if request.method == 'POST':
+        plan = Plan.objects.get(id = request.data['id'])
+        validate_training_numbers(plan.training_numbers(),len(plan.events.all()))
+        serializer = EventsSerializer(data=request.data)
+        planserializer = PlanSerializer(plan)
+        if serializer.is_valid():
+            serializer.save()
+            plan.events.add(serializer.data['id'])
+            return Response(planserializer.data)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_trainers(request):
+    if request.method == 'GET':
+        customusers = CustomUser.objects.all()
+        serializer = TrainerSerializer(customusers,many=True)
+        return Response(serializer.data)
 
 
 @api_view(['POST'])
 def add_plan_with_event(request):
     if request.method == 'POST':
-        serializer = EventsSerializer(data=request.data)
+        serializer = PlanSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            data = request.data
-            event = Event.objects.get(id=serializer.data['id'])
-            data['events'] = [serializer.data['id']]
-            plan = PlanSerializer(data = data)
-            if plan.is_valid():
-                plan.save()
-            else:
-                print(plan)
-                return Response(plan.errors, status=status.HTTP_400_BAD_REQUEST)
-            return Response(plan.data)
+            send_create_plan_mail(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(serializer.data)
+            
+                
 @api_view(['POST'])
 def add_event(request):
     if request.method == 'POST':

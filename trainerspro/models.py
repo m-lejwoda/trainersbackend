@@ -14,6 +14,7 @@ class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
     is_trainer = models.BooleanField(_('is_trainer'), default=False)
+    phone = PhoneNumberField()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -95,7 +96,7 @@ class Plan(models.Model):
     client_phone = PhoneNumberField()
     trainer = models.ForeignKey(CustomUser,on_delete=CASCADE)
     package = models.ForeignKey('Package',on_delete=models.CASCADE)
-    events = models.ManyToManyField('Event')
+    events = models.ManyToManyField('Event', blank=True)
     completed = models.BooleanField(default=False)
     objects = models.Manager()
     plans = PlanCompletedManager()

@@ -1,6 +1,8 @@
 from celery import app, shared_task
 from .models import Plan
 from datetime import datetime,date
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 @shared_task
 def add(x, y):
@@ -29,3 +31,28 @@ def checkplans():
                 elif event.date == today:
                     pass
     return "ses"
+
+@shared_task
+def send_create_plan_mail(data):
+    
+    context= {
+        'id': data['id'],
+        'client_name': data['client_name'],
+        'client_email': data['client_email'],
+        'package_name': data['package_name'],
+        'trainer_name': data['trainer_name'],
+        'trainer_phone': data['trainer_phone'],
+        'last_name': data['last_name'],
+        'event' : data['events'][0],
+        'url' : "http://127.0.0.1:8000/api/"
+
+    }
+    html_message = render_to_string('email_first_plan.html',context=context)
+    send_mail(
+    'Subject here',
+    'Here is the message.',
+    'from@example.com',
+    [data['client_email']],
+    html_message= html_message,
+    fail_silently=False,
+)

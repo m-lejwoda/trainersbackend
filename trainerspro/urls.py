@@ -14,7 +14,9 @@ urlpatterns = [
     path('add_event_by_trainer',trainer_add_event,name='trainer_add_event'),
     path('mainpage',trainer_mainpage,name="trainer_mainpage"),
     path('add_consultation',add_private_consultation,name='add_private_consultation'),
-    path('add_plan_with_event',add_plan_with_event,name='add_plan_with_event')
+    path('add_plan_with_event',add_plan_with_event,name='add_plan_with_event'),
+    path('add_event_to_plan',add_event_to_plan,name='add_event_to_plan'),
+    path('get_trainers',get_trainers,name='get_trainers')
     
     # path('trainerhourswithdate',trainerhourswithdate,name='trainerhourswithdate')
 ]
