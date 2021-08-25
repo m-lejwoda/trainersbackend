@@ -1,0 +1,24 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+.consultation {
+  background-color: black;
+  height: 100%;
+  width: 100%;
+}
+
+.fc-view-harness {
+  background-color: white;
+}
+
+a.fc-daygrid-day-number {
+  color: black;
+}
+/*# sourceMappingURL=privateconsultation.css.map */

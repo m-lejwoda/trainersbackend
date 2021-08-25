@@ -18,7 +18,6 @@ def debug_task(self):
     print(f'Request: {self.request!r}')
 
 app.conf.beat_schedule = {
-    # Executes every Monday morning at 7:30 a.m.
     'check-plans-every-hour': {
         'task': 'trainerspro.tasks.add',
         'schedule': crontab(minute='*/60'),

@@ -16,10 +16,12 @@ from .handleexceptions import validate_date,validate_training_numbers
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from .tasks import send_create_plan_mail
+from .pagination import TransformationPageNumberPagination
+from rest_framework.generics import ListAPIView
+
 
 
 stripe.api_key = settings.STRIPE_API_KEY
-
 
 def add_post(request):
     form = PostForm()
@@ -51,6 +53,12 @@ def get_trainers(request):
         serializer = TrainerSerializer(customusers,many=True)
         return Response(serializer.data)
 
+@api_view(['GET'])
+def get_packages(request):
+    if request.method == 'GET':
+        packages = Package.objects.all()
+        serializer = PackageSerializer(packages,many=True)
+        return Response(serializer.data)
 
 @api_view(['POST'])
 def add_plan_with_event(request):
@@ -105,15 +113,15 @@ def alltrainershours(request):
 # @api_view(['GET'])
 # def getactiveplans()
 
-@api_view(['GET'])
+@api_view(['POST'])
 def trainingbyday(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         current_date = datetime.strptime(request.data['date'],"%Y-%m-%d").date()
         user = CustomUser.objects.get(pk=request.data['user'])
         hours = TrainerHoursPerDay.objects.filter(user=request.data['user'],weekday=current_date.weekday())  
         events = Event.objects.filter(trainer=request.data['user'],date=current_date)
         data = {"date": current_date,"trainershour":hours,"user":user}
-        serializer = TrainerDaySerializer(data,context={"events": events})
+        serializer = TrainerDaySerializer(data,context={"events": events,"date":current_date})
         return Response(serializer.data)
 
 @api_view(['POST'])
@@ -131,6 +139,24 @@ def stripe_session(request):
         mode="payment",
     )
     return Response(stripe_session)
+
+
+@api_view(['GET'])
+def get_trainers_with_image(request):
+    trainers = CustomUser.objects.filter(is_trainer=True)
+    serializer = TrainersImageSerializer(trainers,many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_three_transformations(request):
+    transformations = Transformation.objects.all()[:3]
+    serializer = TransformationSerializer(transformations,many=True)
+    return Response(serializer.data)
+
+class GetAllTransformations(ListAPIView):
+    queryset = Transformation.objects.all()
+    serializer_class = TransformationSerializer
+    pagination_class = TransformationPageNumberPagination
 
 @cache_page(60 * 15)
 def show_success_template(request):

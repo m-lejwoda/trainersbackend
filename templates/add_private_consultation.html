@@ -2,13 +2,87 @@
 {% load static %}
 {% block content %}
 <div class="consultation trainerpage__consultation">
-    <div class="consultation__title"></div>
+    <div class="consultation__title">Rezerwacje</div>
     <div class="consultation__form">
+        <div id="calendarclient"></div>
         <form action="POST">
             {% csrf_token %}
-            {{form}}
+
+            <div class="consultation__date">
+                {{form.date.label}}
+                {{form.date}}
+            </div>
+            <div class="consultation__start_hour">
+                {{form.start_hour.label}}
+                {{form.start_hour}}
+            </div>
+            <div class="consultation__end_hour">
+                {{form.end_hour.label}}
+                {{form.end_hour}}
+            </div>
             <input type="submit" value="Zatwierdź konsultację">
         </form>
     </div>
 </div>
 {% endblock content %}
+{% block script %}
+<script>
+  let actualdate;
+  document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendarclient');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      contentHeight: 360,
+      eventTextColor: 'red',
+      locale: 'pl',
+      firstDay: 1,
+      navLinks: true,
+      navLinkDayClick: function(date, jsEvent) {
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'training_by_day' %}",
+            data: {
+              "user": 1,
+              "date": "2021-07-06"
+            },
+            success: function (response) {
+
+                // if not valid user, alert the user
+                console.log(date)
+                actualdate = moment(date,'MMDDYYYY')
+                //actualdate = date
+                console.log(actualdate)
+
+            },
+
+            error: function (response) {
+
+                console.log(response)
+
+            }
+
+        })
+        //console.log('day', date.toISOString());
+        
+  }
+    });
+    //calendar.render();
+  });
+  function testconsole(){
+      console.log("czy działa")
+  }
+  function getdropdown(evt) {
+    if (evt.currentTarget.children[2].classList.contains('todaytrainings__element__dropdown--hide') === true) {
+      evt.currentTarget.children[2].classList.remove('todaytrainings__element__dropdown--hide')
+      evt.currentTarget.children[2].classList.add('todaytrainings__element__dropdown--visible')
+    } else {
+      evt.currentTarget.children[2].classList.remove('todaytrainings__element__dropdown--visible')
+      evt.currentTarget.children[2].classList.add('todaytrainings__element__dropdown--hide')
+    }
+  }
+
+  var element_dropdown = document.querySelector('.todaytrainings__element');
+  element_dropdown.addEventListener("click", getdropdown);
+
+</script>
+{% endblock script %}

@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_celery_results',
     'django_celery_beat',
-    'django_inlinecss'
+    'django_inlinecss',
+    'corsheaders'
     # 'sorl.thumbnail',
     # 'mce_filebrowser',
 ]
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -202,7 +204,8 @@ EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = config('EMAIL_PORT')
-
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

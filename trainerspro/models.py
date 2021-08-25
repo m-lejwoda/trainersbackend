@@ -14,7 +14,10 @@ class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
     is_trainer = models.BooleanField(_('is_trainer'), default=False)
+    trainer_picture = models.ImageField()
     phone = PhoneNumberField()
+    specialization = models.CharField(max_length=100,default="")
+    description = models.CharField(max_length=255,default="")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -69,6 +72,13 @@ class TrainerHoursPerDay(models.Model):
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name+ ' ' + self.get_weekday_display()
 
+class Transformation(models.Model):
+    name = models.CharField(max_length=100)
+    before = models.ImageField()
+    after = models.ImageField()
+    description = models.TextField(default="")
+    start_number_of_kg = models.PositiveIntegerField()
+    end_number_of_kg = models.PositiveIntegerField()
 
 class Post(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=CASCADE)

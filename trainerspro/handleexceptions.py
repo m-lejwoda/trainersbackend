@@ -11,5 +11,5 @@ def validate_date(value):
         return value
 def validate_training_numbers(training_numbers,events):
     if events >= training_numbers:
-        raise serializers.ValidationError(_("Cant add another training you used whole plan"))
+        raise serializers.ValidationError(_("Cant add another training probably you used whole plan"))
     return training_numbers

@@ -18,6 +18,10 @@ from phonenumber_field.serializerfields import PhoneNumberField
 #     date = serializers.DateField()
 #     # hours_list = serializers
 
+class PackageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Package
+        fields = '__all__'
 
 class TrainerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -78,27 +82,31 @@ class TrainerHoursPerDaySerializer(serializers.ModelSerializer):
             else:
                 second_value = str(i+1)
             hours_list.append([first_value + ":" + list_from_hour_time[1]+ ":" + list_from_hour_time[2],second_value + ":" + list_to_hour_time[1]+ ":" + list_to_hour_time[2],True])
-        print(hours_list)
         self.check_if_event(hours_list,events)
         return hours_list
     
     def check_if_event(self,hours,events):
-        temp =None
+        now = datetime.now()
+        temp = None
         for hour in hours:
-            start_hour_split = hour[0].rsplit(':')
-            end_hour_split = hour[1].rsplit(':')
-            for event in events:
-                start_hour = getattr(event,'start_hour').strftime("%H:%M:%S").rsplit(':')
-                end_hour = getattr(event,'end_hour').strftime("%H:%M:%S").rsplit(':')
-                if start_hour_split[0] == start_hour[0]:
-                    temp = start_hour_split[0]
-                    hour[2] = False
-                if temp != None:
-                    hour[2] = False
-                if end_hour_split[0] == end_hour[0]:
-                    temp = None
-                    if hour[2] != False:
+            dt = datetime.combine(self.context.get('date'),datetime.strptime(hour[0],'%H:%M:%S').time())
+            if dt<now:
+                hour[2] = False
+            else:
+                start_hour_split = hour[0].rsplit(':')
+                end_hour_split = hour[1].rsplit(':')
+                for event in events:
+                    start_hour = getattr(event,'start_hour').strftime("%H:%M:%S").rsplit(':')
+                    end_hour = getattr(event,'end_hour').strftime("%H:%M:%S").rsplit(':')
+                    if start_hour_split[0] == start_hour[0]:
+                        temp = start_hour_split[0]
                         hour[2] = False
+                    if temp != None:
+                        hour[2] = False
+                    if end_hour_split[0] == end_hour[0]:
+                        temp = None
+                        if hour[2] != False:
+                            hour[2] = False
     
 
 
@@ -108,11 +116,16 @@ class TrainerDaySerializer(serializers.Serializer):
     first_name = serializers.CharField(source = "user.first_name")
     last_name = serializers.CharField(source = "user.last_name")
     weekday = serializers.SerializerMethodField()
-    trainershour = TrainerHoursPerDaySerializer(many=True)
+    trainershour = TrainerHoursPerDaySerializer(many=True,context={"date":"sadsadsdaa"})
     def get_weekday(self,obj):
         return obj['date'].weekday()
     
-    
+
+class TrainersImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id','email','phone','trainer_picture','first_name','last_name','specialization','description']
+
 class PlanSerializer(serializers.ModelSerializer):
     trainer_name = serializers.ReadOnlyField(source = "trainer.first_name")
     last_name = serializers.ReadOnlyField(source = "trainer.last_name")
@@ -124,13 +137,9 @@ class PlanSerializer(serializers.ModelSerializer):
         fields =  '__all__'
     
     def validate_events(self,value):
-        print("validate_events")
-        print(value)
         return value
     def validate(self, attrs):
         self.validate_events("wartosc")
-        print("attrs")
-        print(attrs)
         return super().validate(attrs)
     def create(self, validated_data):
         events = validated_data.pop('events')
@@ -140,3 +149,12 @@ class PlanSerializer(serializers.ModelSerializer):
             plan.events.add(ev)
         return plan
     
+
+class TransformationSerializer(serializers.ModelSerializer):
+    kg_diff = serializers.SerializerMethodField()
+    def get_kg_diff(self,obj):
+        return obj.end_number_of_kg -  obj.start_number_of_kg 
+        
+    class Meta:
+        model = Transformation
+        fields = '__all__'

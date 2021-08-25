@@ -27,4 +27,6 @@ class TrainerEventForm(forms.ModelForm):
         fields = ['date','start_hour','end_hour','client_name','client_email','client_phone','trainer']
         widgets = {
             'date': DateInput(),
+            'start_hour': forms.TextInput(attrs={'class': 'privateconsultation__starthour'}),
+            'end_hour': forms.TextInput(attrs={'class': 'privateconsultation__endhour'})
         }
