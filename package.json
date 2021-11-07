@@ -16,11 +16,9 @@
     "url": "https://github.com/saxatachi/trainersbackend/issues"
   },
   "homepage": "https://github.com/saxatachi/trainersbackend#readme",
-  "devDependencies": {
-    "webpack": "^5.51.1",
-    "webpack-cli": "^4.8.0"
-  },
   "dependencies": {
-    "moment": "^2.29.1"
+    "browserify": "^17.0.0",
+    "moment": "^2.29.1",
+    "watchify": "^4.0.0"
   }
 }

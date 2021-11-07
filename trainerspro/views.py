@@ -12,12 +12,13 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from .forms import PostForm,TrainerEventForm
 from datetime import datetime
-from .handleexceptions import validate_date,validate_training_numbers
+from .handleexceptions import validate_date,validate_training_numbers,validate_user
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from .tasks import send_create_plan_mail
+from .tasks import send_create_plan_mail,send_mail_with_add_event_to_plan
 from .pagination import TransformationPageNumberPagination
 from rest_framework.generics import ListAPIView
+from django.shortcuts import redirect
 
 
 
@@ -36,13 +37,18 @@ def index(self):
 def add_event_to_plan(request):
     if request.method == 'POST':
         plan = Plan.objects.get(id = request.data['id'])
-        validate_training_numbers(plan.training_numbers(),len(plan.events.all()))
+        data = request.data
+        data['trainer'] = plan.trainer.id
+        validate_user(plan,data)
+        left_trainings = validate_training_numbers(plan.training_numbers(),len(plan.events.all()))
         serializer = EventsSerializer(data=request.data)
         planserializer = PlanSerializer(plan)
         if serializer.is_valid():
             serializer.save()
+            send_mail_with_add_event_to_plan(planserializer.data,serializer.data,left_trainings)
             plan.events.add(serializer.data['id'])
             return Response(planserializer.data)
+            
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -152,6 +158,11 @@ def get_three_transformations(request):
     transformations = Transformation.objects.all()[:3]
     serializer = TransformationSerializer(transformations,many=True)
     return Response(serializer.data)
+
+
+def redirect_to_another_reservation(request):
+    pass
+
 
 class GetAllTransformations(ListAPIView):
     queryset = Transformation.objects.all()

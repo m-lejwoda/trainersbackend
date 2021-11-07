@@ -9,7 +9,16 @@ def validate_date(value):
         if value < today:
             raise serializers.ValidationError(_("Wrong date"))
         return value
+
 def validate_training_numbers(training_numbers,events):
     if events >= training_numbers:
         raise serializers.ValidationError(_("Cant add another training probably you used whole plan"))
-    return training_numbers
+    else:
+        result = training_numbers - events -1
+        return result
+
+def validate_user(plan,userdata):
+    if plan.client_name == userdata['client_name'] and plan.client_email == userdata['client_email'] and plan.client_phone == userdata['client_phone']:
+        return True
+    else:
+        raise serializers.ValidationError(_("Data is not correct"))

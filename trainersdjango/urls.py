@@ -17,15 +17,20 @@ import debug_toolbar
 from django.contrib import admin
 from django.urls import path,include
 from filebrowser.sites import site
+from wagtail.core import urls as wagtail_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.documents import urls as wagtaildocs_urls
 
 
 urlpatterns = [
     # path('admin/filebrowser/',  site.urls),
     # path('grappelli/', include('grappelli.urls')),
-    path('admin/', admin.site.urls),
+    path('django-admin/', admin.site.urls),
     path('apiauthentication/', include('rest_framework.urls')),
     path('api/',include('trainerspro.urls')),
     path('debug/', include(debug_toolbar.urls,namespace='django_toolbar')),
     path('tinymce/', include('tinymce.urls')),
+    path('admin/', include(wagtailadmin_urls)),
+    path('documents/', include(wagtaildocs_urls))
     # path('mce_filebrowser/',include('mce_filebrowser.urls'))
 ]

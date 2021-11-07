@@ -1,7 +1,6 @@
-import moment from "@moment";
+var moment = require('moment')
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("Załadowany dokument")
     var calendarEl = document.getElementById('calendarclient');
     var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
@@ -13,20 +12,23 @@ document.addEventListener('DOMContentLoaded', function () {
           navLinkDayClick: function(date, jsEvent) {
             $.ajax({
                 type: 'POST',
-                url: "{% url 'training_by_day' %}",
+                url: "http://127.0.0.1:8000/api/training_by_day",
                 data: {
                   "user": 1,
                   "date": "2021-07-06"
-                },
+              },
                 success: function (response) {
+                  console.log("sukces")
+                  console.log(response)
                     // if not valid user, alert the user
-                    console.log(date)
-                    actualdate = moment(date,'MMDDYYYY')
+                    // console.log(date)
+                    // actualdate = moment(date,'YYYY-MM-DD')
                     //actualdate = date
-                    console.log(actualdate)
+                    // console.log(actualdate)
     
                 },
                 error: function (response) {
+                    console.log("nie działa")
                     console.log(response)
                 }
             }) 

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% load static %}
+{% load inlinecss %}
+{% inlinecss "static/sass/email.css" %}
+<html>
+    <body>
+        Do twojego planu treningowego został dodany trening.
+        Odbędzie się on dnia {{event.date}} w godzinach {{event.start_hour}} - {{event.end_hour}}
+        {% if left_trainings <= 0 %}
+            Gratulujemy zrealizowałeś cały pakiet 
+        {% else %}
+        Pozostało do wykorzystania {{left_trainings}}
+        <button><a href="http://localhost:3000/reservationtoplan/{{id}}/{{client_name}}/{{client_email}}/{{client_phone}}/{{trainer}}">Dodaj kolejną rezerwację</a></button>
+        {% endif %}
+    </body>
+</html>
+{% endinlinecss %}

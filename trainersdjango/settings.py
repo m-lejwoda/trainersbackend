@@ -56,7 +56,20 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'django_inlinecss',
-    'corsheaders'
+    'corsheaders',
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.core',
+    'taggit',
+    'modelcluster',
     # 'sorl.thumbnail',
     # 'mce_filebrowser',
 ]
@@ -71,6 +84,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'trainersdjango.urls'
@@ -258,3 +272,50 @@ TINYMCE_DEFAULT_CONFIG = {
     'menubar': True,
     'statusbar': True,
     }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
+
+
+# WAGTAIL SETTINGS
+
+# This is the human-readable name of your Wagtail install
+# which welcomes users upon login to the Wagtail admin.
+WAGTAIL_SITE_NAME = 'My Project'
+
+# Replace the search backend
+#WAGTAILSEARCH_BACKENDS = {
+#  'default': {
+#    'BACKEND': 'wagtail.search.backends.elasticsearch5',
+#    'INDEX': 'myapp'
+#  }
+#}
+
+# Wagtail email notifications from address
+# WAGTAILADMIN_NOTIFICATION_FROM_EMAIL = 'wagtail@myhost.io'
+
+# Wagtail email notification format
+# WAGTAILADMIN_NOTIFICATION_USE_HTML = True
+
+# Reverse the default case-sensitive handling of tags
+TAGGIT_CASE_INSENSITIVE = True
