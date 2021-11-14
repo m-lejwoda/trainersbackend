@@ -25,6 +25,9 @@ services:
         depends_on:
             - pgdb
             - redis
+        environment:
+            - SECRET_KEY=devsecretkey
+            - DEBUG=1
     celery:
         container_name: celery
         build: .

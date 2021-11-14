@@ -73,6 +73,7 @@ telepath==0.2
 toml==0.10.2
 tornado==6.1
 urllib3==1.26.6
+uWSGI==2.0.20
 vine==5.0.0
 wagtail==2.14.1
 wcwidth==0.2.5

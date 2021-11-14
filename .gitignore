@@ -79,6 +79,7 @@ celerybeat-schedule.*
 *.sage.py 
 
 # Environments 
+.env/
 .env 
 .venv 
 env/ 
@@ -86,6 +87,7 @@ venv/
 ENV/ 
 env.bak/ 
 venv.bak/ 
+env/*/*/*
 
 # mkdocs documentation 
 /site 
